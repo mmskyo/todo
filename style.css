@@ -1,118 +1,27 @@
-:root {
-    --background-color-light: #FFFFFF;
-    --text-color-light: #000000;
-    --toggle-background-light: #CCCCCC;
-    --toggle-ball-light: #FFFFFF;
-
-    --background-color-dark: #333333;
-    --text-color-dark: #FFFFFF;
-    --toggle-background-dark: #4D4D4D;
-    --toggle-ball-dark: #FFFFFF;
-
-    --font-size-base: 32px; /* 기본 텍스트 크기 */
-    --font-size-large: 52px; /* 제목 등 큰 텍스트용 폰트 크기 */
-}
-
+/* 기본 스타일 */
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: var(--font-size-base);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    transition: background-color 0.3s, color 0.3s;
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: black;
+    transition: background 0.3s, color 0.3s;
 }
 
-h1 {
-    font-size: var(--font-size-large);
-}
-
+/* 다크모드 스타일 */
 .dark-mode {
-    --background-color: var(--background-color-dark);
-    --text-color: var(--text-color-dark);
+    background-color: #121212;
+    color: white;
 }
 
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 100px; /* 너비 조정 */
-    height: 52px; /* 높이 조정 */
-}
-
-.toggle-switch .checkbox {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-switch .label {
-    position: absolute;
+/* 버튼 스타일 */
+#dark-mode-toggle {
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--toggle-background-light);
-    transition: background-color 0.4s;
-    border-radius: 52px; /* 둥근 모서리 반경 조정 */
+    background: none;
+    border: 1px solid #000;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.toggle-switch .label:before {
-    position: absolute;
-    content: "";
-    height: 48px; /* 내부 원 높이 조정 */
-    width: 48px; /* 내부 원 너비 조정 */
-    left: 2px;
-    bottom: 2px;
-    background-color: var(--toggle-ball-light);
-    transition: transform 0.4s;
-    border-radius: 50%;
-}
-
-.toggle-switch input:checked + .label {
-    background-color: var(--toggle-background-dark);
-}
-
-.toggle-switch input:checked + .label:before {
-    transform: translateX(48px); /* 내부 원 이동 거리 조정 */
-}
-
-.content {
-    text-align: center;
-    transition: color 0.3s;
-}
-
-/* Optional: Font Awesome Icons */
-.fas.fa-sun, .fas.fa-moon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: color 0.3s, opacity 0.3s;
-}
-/* 아이콘 크기 조정을 위한 클래스 추가 (선택적) */
-.fas {
-    font-size: 24px; /* 아이콘의 폰트 크기 조정 */
-}
-.fa-sun {
-    color: #f1c40f;
-    left: 8px; /* 위치 조정 */
-    opacity: 1; /* 기본 가시성 */
-}
-
-.fa-moon {
-    color: #f39c12;
-    right: 8px; /* 위치 조정 */
-    opacity: 0; /* 기본 가시성 */
-}
-
-.toggle-switch input:checked ~ .fa-sun {
-    opacity: 0; /* 다크 모드에서 해 아이콘 숨김 */
-}
-
-.toggle-switch input:checked ~ .fa-moon {
-    opacity: 1; /* 다크 모드에서 달 아이콘 표시 */
+/* 다크모드 버튼 스타일 변경 */
+.dark-mode #dark-mode-toggle {
+    border-color: white;
 }
