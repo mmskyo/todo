@@ -24,4 +24,47 @@ body {
 /* 다크모드 버튼 스타일 변경 */
 .dark-mode #dark-mode-toggle {
     border-color: white;
+    color: white;
 }
+
+/* 리스트 스타일 */
+#todo-list {
+    list-style: none;
+    padding: 0;
+}
+#todo-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* 체크박스 */
+.todo-checkbox {
+    margin-right: 10px;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.delete-btn {
+    margin-left: auto;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
