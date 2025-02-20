@@ -5,42 +5,79 @@ document.addEventListener("DOMContentLoaded", function () {
     const addButton = document.getElementById("add-button");
     const todoList = document.getElementById("todo-list");
 
-    // 할 일 추가 함수
-    function addTodo() {
-        const todoText = todoInput.value.trim();
-        if (todoText === "") return; // 빈 입력 방지
+    // 로컬 스토리지에서 데이터 불러오기
+    function loadTodos() {
+        const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+        savedTodos.forEach(todo => renderTodo(todo.text, todo.completed));
+    }
 
-        // 새로운 리스트 아이템 생성
+    // 로컬 스토리지에 데이터 저장하기
+    function saveTodos() {
+        const todos = [];
+        document.querySelectorAll("#todo-list li").forEach(li => {
+            todos.push({
+                text: li.querySelector("span").textContent,
+                completed: li.querySelector(".todo-checkbox").checked
+            });
+        });
+        localStorage.setItem("todos", JSON.stringify(todos));
+    }
+
+    // 할 일 화면에 추가
+    function renderTodo(todoText, completed = false) {
         const li = document.createElement("li");
 
-        // 체크박스 생성
+        // 체크박스 추가
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("todo-checkbox");
+        checkbox.checked = completed;
 
-        // 체크박스 이벤트 (체크하면 줄 긋기)
+        // 할 일 텍스트 추가 (span 사용)
+        const textSpan = document.createElement("span");
+        textSpan.textContent = todoText;
+        textSpan.classList.add("todo-text"); // 줄 긋기 적용할 부분
+
+        // 체크박스 이벤트 (줄 긋기)
         checkbox.addEventListener("change", function () {
             if (checkbox.checked) {
-                li.style.textDecoration = "line-through";
+                textSpan.style.textDecoration = "line-through"; // 텍스트만 줄 긋기
             } else {
-                li.style.textDecoration = "none";
+                textSpan.style.textDecoration = "none";
             }
+            saveTodos();
         });
 
         // 삭제 버튼 추가
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "삭제";
         deleteButton.classList.add("delete-btn");
-        deleteButton.onclick = () => li.remove();
+        deleteButton.onclick = function () {
+            li.remove();
+            saveTodos(); // 삭제 시 저장
+        };
 
-        // 리스트 아이템 구성
-        li.appendChild(checkbox);  // 체크박스 추가
-        li.appendChild(document.createTextNode(todoText)); // 할 일 텍스트 추가
-        li.appendChild(deleteButton); // 삭제 버튼 추가
+        // 리스트에 추가
+        li.appendChild(checkbox);
+        li.appendChild(textSpan);
+        li.appendChild(deleteButton);
         todoList.appendChild(li);
 
-        // 입력 필드 비우기
-        todoInput.value = "";
+        // 완료된 항목은 줄 긋기
+        if (completed) {
+            li.style.textDecoration = "line-through";
+        }
+    }
+
+    // 할 일 추가 함수
+    function addTodo() {
+        const todoText = todoInput.value.trim();
+        if (todoText === "") return;
+
+        renderTodo(todoText); // 화면에 추가
+        saveTodos(); // 저장
+
+        todoInput.value = ""; // 입력 필드 초기화
     }
 
     // 이벤트 리스너 추가
@@ -50,6 +87,9 @@ document.addEventListener("DOMContentLoaded", function () {
             addTodo();
         }
     });
+
+    // 페이지 로드 시 기존 할 일 불러오기
+    loadTodos();
 });
 
 // 다크모드 
