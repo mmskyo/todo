@@ -1,30 +1,33 @@
 /* 기본 스타일 */
 body {
-    font-family: Arial, sans-serif;
     background-color: white;
     color: black;
     transition: background 0.3s, color 0.3s;
 }
 
-/* 다크모드 스타일 */
-.dark-mode {
+/* 다크 모드 적용 */
+body.dark-mode {
     background-color: #121212;
     color: white;
 }
 
 /* 버튼 스타일 */
 #dark-mode-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
     cursor: pointer;
-    background: none;
-    border: 1px solid #000;
-    padding: 5px 10px;
+    background: #444;
+    color: white;
+    border: none;
     border-radius: 5px;
 }
 
-/* 다크모드 버튼 스타일 변경 */
-.dark-mode #dark-mode-toggle {
-    border-color: white;
-    color: white;
+/* 다크 모드 버튼 스타일 */
+body.dark-mode #dark-mode-toggle {
+    background: white;
+    color: black;
 }
 
 /* 리스트 스타일 */
@@ -68,3 +71,20 @@ li {
     cursor: pointer;
 }
 
+/* 필터 버튼 */
+#filter-buttons {
+    margin-bottom: 10px;
+}
+
+.filter-btn {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background-color: #4d4dff;
+    color: white;
+}

@@ -4,12 +4,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const todoInput = document.getElementById("todo-input");
     const addButton = document.getElementById("add-button");
     const todoList = document.getElementById("todo-list");
+    const darkModeToggle = document.getElementById("dark-mode-toggle"); 
+    // 필터 버튼 이벤트 리스너 추가
+    document.getElementById("filter-all").addEventListener("click", () => filterTodos("all"));
+    document.getElementById("filter-active").addEventListener("click", () => filterTodos("active"));
+    document.getElementById("filter-completed").addEventListener("click", () => filterTodos("completed"));
 
-    // 로컬 스토리지에서 데이터 불러오기
-    function loadTodos() {
-        const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-        savedTodos.forEach(todo => renderTodo(todo.text, todo.completed));
+    function filterTodos(filterType) {
+        const todos = document.querySelectorAll("#todo-list li");
+
+        todos.forEach(todo => {
+            const isCompleted = todo.querySelector(".todo-checkbox").checked;
+
+            if (filterType === "all") {
+                todo.style.display = "flex";
+            } else if (filterType === "active" && isCompleted) {
+                todo.style.display = "none";
+            } else if (filterType === "completed" && !isCompleted) {
+                todo.style.display = "none";
+            } else {
+                todo.style.display = "flex";
+            }
+        });
+
+        // 버튼 활성화 스타일 변경
+        document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+        document.getElementById(`filter-${filterType}`).classList.add("active");
     }
+
+    
 
     // 로컬 스토리지에 데이터 저장하기
     function saveTodos() {
@@ -23,51 +46,105 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("todos", JSON.stringify(todos));
     }
 
-    // 할 일 화면에 추가
+    function addDragAndDrop() {
+        const items = document.querySelectorAll("#todo-list li");
+    
+        items.forEach(item => {
+            item.draggable = true;
+    
+            item.addEventListener("dragstart", function (event) {
+                event.dataTransfer.setData("text/plain", itemsIndex(item));
+                item.classList.add("dragging");
+            });
+    
+            item.addEventListener("dragover", function (event) {
+                event.preventDefault();
+                const draggingItem = document.querySelector(".dragging");
+                const afterElement = getDragAfterElement(event.clientY);
+    
+                if (afterElement == null) {
+                    todoList.appendChild(draggingItem);
+                } else {
+                    todoList.insertBefore(draggingItem, afterElement);
+                }
+            });
+    
+            item.addEventListener("drop", function () {
+                document.querySelector(".dragging").classList.remove("dragging");
+                saveTodos(); // 변경된 순서 저장
+            });
+    
+            item.addEventListener("dragend", function () {
+                item.classList.remove("dragging");
+            });
+        });
+    }
+    
+    // 현재 항목이 리스트에서 몇 번째인지 찾는 함수
+    function itemsIndex(item) {
+        return Array.from(todoList.children).indexOf(item);
+    }
+    
+    // 드래그 중 마우스 위치를 기준으로 삽입할 위치 찾기
+    function getDragAfterElement(y) {
+        const draggableElements = [...document.querySelectorAll("#todo-list li:not(.dragging)")];
+    
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+    
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+    
+    // 기존 loadTodos() 함수 안에서 드래그 기능 추가
+    function loadTodos() {
+        const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+        savedTodos.forEach(todo => renderTodo(todo.text, todo.completed));
+        addDragAndDrop();
+    }
+    
+    // 기존 renderTodo() 함수의 마지막에 드래그 기능 추가
     function renderTodo(todoText, completed = false) {
         const li = document.createElement("li");
-
-        // 체크박스 추가
+        
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("todo-checkbox");
         checkbox.checked = completed;
-
-        // 할 일 텍스트 추가 (span 사용)
+    
         const textSpan = document.createElement("span");
         textSpan.textContent = todoText;
-        textSpan.classList.add("todo-text"); // 줄 긋기 적용할 부분
-
-        // 체크박스 이벤트 (줄 긋기)
+        textSpan.classList.add("todo-text");
+    
         checkbox.addEventListener("change", function () {
-            if (checkbox.checked) {
-                textSpan.style.textDecoration = "line-through"; // 텍스트만 줄 긋기
-            } else {
-                textSpan.style.textDecoration = "none";
-            }
+            textSpan.style.textDecoration = checkbox.checked ? "line-through" : "none";
             saveTodos();
         });
-
-        // 삭제 버튼 추가
+    
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "삭제";
         deleteButton.classList.add("delete-btn");
         deleteButton.onclick = function () {
             li.remove();
-            saveTodos(); // 삭제 시 저장
+            saveTodos();
         };
-
-        // 리스트에 추가
+    
         li.appendChild(checkbox);
         li.appendChild(textSpan);
         li.appendChild(deleteButton);
         todoList.appendChild(li);
-
-        // 완료된 항목은 줄 긋기
+    
         if (completed) {
-            li.style.textDecoration = "line-through";
+            textSpan.style.textDecoration = "line-through";
         }
-    }
+    
+        addDragAndDrop(); // 추가된 항목도 드래그 가능하도록 설정
+    }    
 
     // 할 일 추가 함수
     function addTodo() {
@@ -90,26 +167,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 페이지 로드 시 기존 할 일 불러오기
     loadTodos();
-});
 
-// 다크모드 
-document.addEventListener("DOMContentLoaded", () => {
-    const darkModeToggle = document.getElementById("dark-mode-toggle");
-    const body = document.body;
-
-    // 로컬 스토리지에서 다크모드 상태 불러오기
-    if (localStorage.getItem("darkMode") === "enabled") {
-        body.classList.add("dark-mode");
+    // 다크 모드 토글 기능
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
     }
 
-    darkModeToggle.addEventListener("click", () => {
-        body.classList.toggle("dark-mode");
-
-        // 현재 상태를 로컬 스토리지에 저장
-        if (body.classList.contains("dark-mode")) {
-            localStorage.setItem("darkMode", "enabled");
-        } else {
-            localStorage.setItem("darkMode", "disabled");
+    // 다크 모드 유지
+    function loadDarkMode() {
+        const isDarkMode = localStorage.getItem("darkMode") === "true";
+        if (isDarkMode) {
+            document.body.classList.add("dark-mode");
         }
-    });
+    }
+
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+    loadDarkMode();
 });
