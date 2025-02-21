@@ -1,14 +1,29 @@
 /* 기본 스타일 */
 body {
-    background-color: white;
-    color: black;
+    background-color: #f7f7f7; /* 부드러운 연한 회색 */
+    color: #333; /* 눈이 편한 어두운 회색 */
     transition: background 0.3s, color 0.3s;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-/* 다크 모드 적용 */
-body.dark-mode {
-    background-color: #121212;
-    color: white;
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+button {
+    background: #d9d9f3; /* 연한 블루-그레이 */
+    color: #333;
+}
+
+body.dark-mode .container {
+    background: #1e1e1e;
 }
 
 /* 버튼 스타일 */
@@ -22,12 +37,36 @@ body.dark-mode {
     color: white;
     border: none;
     border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
 }
 
-/* 다크 모드 버튼 스타일 */
 body.dark-mode #dark-mode-toggle {
     background: white;
     color: black;
+}
+
+/* 날짜 */
+#current-date {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* 헤더와 메인 간격 조정 */
+header {
+    margin-bottom: 20px;
+}
+
+/* 입력 필드와 추가 버튼을 나란히 배치 */
+.input-container {
+    display: flex;
+    gap: 10px;
+}
+
+/* 다크 모드 적용 */
+body.dark-mode {
+    background-color: #1c1c1c; /* 기존보다 부드러운 다크 그레이 */
+    color: #e0e0e0; /* 강하지 않은 부드러운 흰색 */
 }
 
 /* 리스트 스타일 */
@@ -35,45 +74,60 @@ body.dark-mode #dark-mode-toggle {
     list-style: none;
     padding: 0;
 }
+
 #todo-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px;
+    padding: 10px;
     border-bottom: 1px solid #ccc;
+    background: white;
+    border-radius: 5px;
+    transition: transform 0.2s;
 }
+
+body.dark-mode #todo-list li {
+    background: #252525;
+}
+
+#todo-list li:hover {
+    transform: scale(1.02);
+}
+
+/* 삭제 버튼 */
 .delete-btn {
-    background-color: red;
-    color: white;
+    background-color: #ffadad; /* 쨍하지 않은 부드러운 레드 */
+    color: #333;
     border: none;
     padding: 5px;
     cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.delete-btn:hover {
+    background-color: #ff7f7f; /* 너무 강하지 않게 조정 */
+}
+
+body.dark-mode .delete-btn {
+    background-color: #c44d4d;
+    color: #e0e0e0;
+}
+
+body.dark-mode .delete-btn:hover {
+    background-color: #a33a3a;
 }
 
 /* 체크박스 */
 .todo-checkbox {
     margin-right: 10px;
-}
-
-li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-}
-
-.delete-btn {
-    margin-left: auto;
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
+    accent-color: #4d4dff; /* 기존 컬러 유지 */
 }
 
 /* 필터 버튼 */
 #filter-buttons {
     margin-bottom: 10px;
+    border-radius: 5px;
 }
 
 .filter-btn {
@@ -82,9 +136,118 @@ li {
     border: none;
     background-color: #ddd;
     cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 5px;
 }
 
 .filter-btn.active {
     background-color: #4d4dff;
     color: white;
+    border-radius: 5px;
+}
+
+/* 입력 필드 기본 스타일 */
+#todo-input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 다크 모드에서 입력 필드 스타일 */
+body.dark-mode #todo-input {
+    background-color: #2a2a2a; /* 부드러운 다크 톤 */
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+/* 입력 필드 포커스 스타일 */
+#todo-input:focus {
+    width: 110%;
+    border-color: #4d4dff;
+    box-shadow: 0 0 10px rgba(77, 77, 255, 0.5);
+}
+
+/* 다크 모드에서 입력 필드 포커스 스타일 */
+body.dark-mode #todo-input:focus {
+    border-color: #4d4dff;
+    box-shadow: 0 0 12px rgba(77, 77, 255, 0.8);
+}
+
+body.dark-mode button {
+    background: #3a3a52; /* 딥 블루-그레이 */
+    color: #e0e0e0;
+}
+
+body.dark-mode button:hover {
+    background: #4d4d6e; /* 너무 밝지 않게 은은한 변화 */
+}
+
+/* 추가 버튼 스타일 개선 */
+#add-todo {
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #4d4dff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* 버튼 호버 효과 */
+#add-todo:hover {
+    background-color: #3737d4;
+    transform: scale(1.05);
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    #todo-input {
+        width: 100%;
+    }
+
+    #add-todo {
+        width: 100%;
+    }
+
+    #todo-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .delete-btn {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
 }
